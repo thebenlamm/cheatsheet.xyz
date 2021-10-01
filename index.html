@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cheet Sheet</title>
+	
+	<script src="./highlight.min.js"></script>
+	<script type="text/javascript" src="./highlightStyles.js"></script>
+	<script type="text/javascript">
+		var tag = null;
+		function updateStyles(style){
+			if(tag) tag.parentNode.removeChild( tag );
+			tag = document.createElement('link');
+			tag.rel="stylesheet";
+			tag.type="text/css";
+			tag.href=`./highlight/styles/${style}.min.css`
+			document.head.appendChild(tag);
+			hljs.highlightAll();
+		}
+
+		function onStyleChange(){
+			var e = document.getElementById('style-select').value;
+			updateStyles(e);
+		}
+
+		window.onload = function(){
+		document.getElementById('style-select').innerHTML = 
+			hightlightStyles.map(style => {
+				var styleName = style.replace('.min.css', '');
+				return `<option value="${styleName}" ${styleName === 'devibeans' ? 'selected' : ''}>
+							${styleName}
+						</option>`}).join('');
+
+			updateStyles('devibeans');
+		};
+	</script>
+
+	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+		body {
+			font-family: 'Open Sans', sans-serif;
+		}
+
+		div.content {
+			margin-left: 10px;
+			background-color: #fffaf0;
+			padding: 5px;
+		}
+
+		span.instructions {
+			font-size: 0.8em;
+		}
+
+		span.link {
+			margin-right: 20px;
+		}
+
+		h4 a:link, h2 a:link {
+			text-decoration: none;
+		}
+
+		a:visited {
+			color: #000000;
+		}
+
+/*		.prettyprint {
+			padding: 10px;
+		}
+
+		.prettyprint > a {
+			color: #ecd574;
+		}*/
+	</style>
+	<!-- https://www.w3schools.com/html/html_computercode_elements.asp -->
+</head>
+<body>
+<div id='container'>
+	<div id='header'>
+		<h1>Cheatsheet</h1>
+		<select id='style-select' onchange='onStyleChange()'>
+			<option value="school-book" default>school-book</option>
+		</select>
+	</div>
+	<div>
+		<span class="link"><a href="#screen">screen</a></span>
+		<span class="link"><a href="#mongo">mongo</a></span>
+		<span class="link"><a href="#encryption">encryption</a></span>
+		<span class="link"><a href="#compression">compression</a></span>
+		<span class="link"><a href="#cron">cron</a></span>
+		<span class="link"><a href="#networking">networking</a></span>
+		<span class="link"><a href="#git">git</a></span>
+		<span class="link"><a href="#disk">disk</a></span>
+		<span class="link"><a href="#shell">shell</a></span>
+		<span class="link"><a href="#docker">docker</a></span>
+		<span class="link"><a href="#aws">aws cli</a></span>
+		<span class="link"><a href="#imagemagick">imagemagick</a></span>
+		<span class="link"><a href="#ffmpeg">ffmpeg</a></span>
+	</div>
+	<div id='main'>
+		<div class='category' id='screen'> <!-- Start Screen-->
+			<h2>Screen</h2>
+			<div class='content'>
+				<div>
+					<h4>start, reconnect and list</h4>
+					<pre><code>screen [-S name] # start a new session
+screen -ls # list screens
+screen -r name # reconnect to session						
+screen -d -m -S name # start a new session for sharing
+screen -x name # join a shared screen</code></pre>
+				</div>
+			</div>
+			<div class='content'>
+				<div>
+					<h4>Screen commands</h4>
+					<span class='instructions'>Use <code>Ctrl+A</code> prefix to run commands within screen</span>
+					<pre><code>D # disconnect from session
+C # disconnect and create a new session
+n # jump to screen n (0-indexed)
+Shift+S # split screen horizontally
+| # split screen vertically
+Tab # Jump between regions of split screen
+Q # Close all other regions
+X # Close current region
+esc # enable/disable scroll feature</code></pre>
+				</div>
+			</div>
+		</div> <!-- End Screen-->
+		<div class='category' id='mongo'> <!-- Start Mongo-->
+			<h2>Mongo</h2>
+			<div class='content'>
+				<div>
+					<h4>Export/Import/Dump</h4>
+					<span class='instructions'>From the command line. (i.e. not mongo cli)</span>
+					<pre><code>mongoexport --db &lt;database&gt; --collection &lt;collection&gt; --out &lt;output_file.json&gt;
+mongoimport --db &lt;database&gt; --collection &lt;collection&gt; --file &lt;input_file.json&gt;
+mongodump -d &lt;database&gt; -o &lt;output_dir&gt;</code></pre>
+				</div>
+			</div>
+		</div> <!-- End Mongo-->
+		<div class='category' id='encryption'> <!-- Start enc-->
+			<h2>Encryption</h2>
+			<div class='content'>
+				<div>
+					<h4>hash a file</h4>
+					<pre><code>md5 file.txt
+
+# Linux
+sha256sum file.txt
+echo -n "foobar" | sha256sum
+
+# macOS
+shasum -a 256 file.txt
+echo -n "foobar" | shasum -a 256</code></pre>
+				</div>
+			</div>
+			<div class='content'>
+				<div>
+					<h4>openssl</h4>
+					<pre><code>openssl list-cipher-algorithms # Get list of available ciphers
+
+# linux
+openssl aes-128-cbc &lt; plain.txt &gt; cipher.txt.crypt # encrypt
+openssl aes-128-cbc -d &lt; cipher.txt.crypt &gt; plain.txt  # decrypt
+
+#mac
+openssl aes-128-cbc -in plain.txt -out cipher.txt.crypt # encrypt
+openssl aes-128-cbc -d -in cipher.txt.crypt -out plain.txt  # decrypt
+
+openssl dgst -sha256 -binary &lt;filename&gt;</code></pre>
+				</div>
+			</div>
+			<div class='content'>
+				<div>
+					<h4>gpg</h4>
+					<pre><code>gpg --cipher-algo AES256 -c filename.tar.gz # encrypt
+gpg -o filename.tar.gz -d filename.tar.gz.gpg # decrypt</code></pre>
+				</div>
+			</div>
+		</div> <!-- End enc-->
+		<div class='category' id='compression'> <!-- Start compression-->
+			<h2>Compression</h2>
+			<div class='content'>
+				<div>
+					<h4>tarballs</h4>
+					<pre><code>tar -czf &lt;to_file&gt;.tar.gz &lt;from_file&gt; # Compress a file or directory into a *.tar.gz file
+tar -xvf &lt;from_file&gt;.tar.gz [-C /foo/bar] # decompress a *.tar.gz file</code></pre>
+					<h4>zip</h4>
+					<pre><code>zip -r myfile.zip myfolder
+unzip myfile.zip</code></pre>
+				</div>
+			</div>
+		</div> <!-- End compression-->
+		<div class='category' id='cron'> <!-- Start Cron-->
+			<h2>Cron</h2>
+			<div class='content'>
+				<div>
+					<h4>Crontab</h4>
+					<pre><code>crontab -l # print out the crontab file<br>crontab -e # edit the crontab file</code></pre>
+				</div>
+			</div>
+		</div> <!-- End Cron-->
+		<div class='category' id='networking'> <!-- Start Networking-->
+			<h2>Networking</h2>
+			<div class='content'>
+				<div>
+					<h4>Configuration</h4>
+					<pre><code>/etc/network/interfaces
+/etc/wpa_supplicant/wpa_supplicant.conf</code></pre>
+
+					<h4>Commands</h4>
+					<pre><code>ifdown/ifup eth0 # restart specific network interface
+/etc/init.d/networking restart #restart all interfaces
+/sbin/ifconfig -a #see all interfaces
+sudo iwlist wlan0 scan</code></pre>
+
+					<h4>DNS Lookup Utilities</h4>
+					<pre><code>nslookup &lt;domain | ip&gt; # query Internet name servers
+host &lt;domain&gt;
+
+dig +short hostname.com
+dig +nssearch hostname.com
+dig +trace hostname.com
+dig @8.8.8.8 hostname.com
+dig +short myip.opendns.com @resolver1.opendns.com # get public ip</code></pre>
+
+					<h4>Watch Network Traffic</h4>
+					<pre><code>sudo iftop -f "port 3000" # watch traffic on port 3000
+netstat -ac 5 # show network status</code></pre>
+
+					<h4>Other</h4>
+					<pre><code>sudo killall -HUP mDNSResponder;sudo killall mDNSResponderHelper;sudo dscacheutil -flushcache // flush dns cache on mac</code></pre>
+				</div>
+			</div>
+		</div> <!-- End Networking-->
+		<div class='category' id='git'> <!-- Start Git-->
+			<h2>Git</h2>
+			<div class='content'>
+				<div>
+					<h4>Summary</h4>
+					<pre><code>&lt;index&gt; snapshot of proposed next commit
+&lt;branch&gt; is a label at the tip of a sequence of commits.
+&lt;HEAD&gt; is a label that points at a &lt;branch&gt; and is what the &lt;index&gt; will be committed on top of.
+&lt;working-directory/working-tree&gt; are the files in your editor. It’s what you see and work with. The sandbox.</code></pre>
+				</div>
+				<div>
+					<h4>Reset</h4>
+					<span class='instructions'>Moves &lt;branch&gt; label to another commit (with HEAD following &lt;branch&gt; label)</span>
+					<pre><code>git reset [--soft|--mixed|--hard] [HEAD~1](default is to current HEAD) [filename]
+&nbsp;--soft) Move &lt;HEAD&gt; to a given commit
+--mixed) Make &lt;index&gt; look like &lt;HEAD&gt;. (i.e. clears &lt;index&gt;) default
+&nbsp;--hard) Make the Working Directory look like &lt;HEAD&gt;
+note: reseting a file will only work in --mixed mode.</code></pre>
+				</div>
+				<div>
+					<h4>Checkout</h4>
+					<span class='instructions'>Moves HEAD/index/working-dir to &lt;branch&gt;</span>
+					<pre><code>git checkout [branch] [filename] # updates HEAD to &lt;branch&gt; and will leave or attempt to merge changes in working-dir
+git checkout . - # will overwrite unstaged changes with index.</code></pre>
+				</div>
+				<div>
+					<h4>Clean</h4>
+					<span class='instructions'>Remove files unknown to git (by default untracked files)</span>
+					<pre><code>git clean -f (sometimes needed if git not configured in a certain way)
+git clean -x also remove ignored files
+git clean -X only remove ignored files
+git clean -d remove untracked</code></pre>
+				</div>
+				<div>
+					<h4>Tag</h4>
+					<pre><code>git tag -l "v4*" # list all tags that start with 'v4'
+git show v4.5.7 # show details of tag
+git tag -a v4.5.8 -m "tag message" # create an annotated tags
+git tag -a v4.5.8 2cfbe90 # add a tag to an old commit
+git push origin v4.5.8</code></pre>
+				</div>
+				<div>
+					<h4>Other commands</h4>
+					<pre><code>git log --pretty=format: --name-only --since="1 year ago" # show files for each commit over the past year
+git log --pretty=oneline
+git merge --squash your-branch-name # squash another branch as a single commit and merge
+git rebase # Reapply commits on top of another base tip
+git stash # save all local tracked changes and reset HEAD
+git update-index --assume-unchanged &lt;file name&gt; # Temporarily ignore changes to a file
+git update-index --no-assume-unchanged &lt;file name&gt; # Undo the above
+git commit --amend -m "an updated commit message"
+git commit --amend --no-edit
+git add --patch &lt;filename&gt; # Stage a file in chunks. [y/n/q/a] (See <a href="https://stackoverflow.com/questions/1085162/commit-only-part-of-a-file-in-git/1085191#1085191">here</a> for more info)</code></pre>
+				</div>
+			</div>
+		</div> <!-- End Git-->
+		<div class='category' id='disk'> <!-- Start Linux Disk-->
+			<h2>Disk Commands</h2>
+			<div class='content'>
+				<div>
+					<h4>Disk Usage</h4>
+					<pre><code>df -h # display free disk space
+du -sh # display disk usage statistics
+du -h --max-depth=1
+lsblk</code></pre>
+					<h4>Volumes</h4>
+					<pre><code>sudo mkfs.ntfs -f /dev/sdd1 # format disk to NTFS
+# To use a disk across mac/linux/windows format it on mac to exfat. On ubuntu install exfat-fuse exfat-utils
+
+sudo mount /dev/sdd1 /media/usb # mount disk
+
+sudo umount /dev/sdd1 # unmount disk
+sudo umount -l /dev/sdd1 # lazy unmount. if disk wont unmount.
+sudo umount -f /dev/sdd1</code></pre>
+					<h4>Memory</h4>
+					<pre><code>top # display and update sorted information about processes
+free -g # memory allocation
+mvstat -s
+dmidecode
+less /proc/meminfo # (above commands read this file)</code></pre>
+				</div>
+			</div>
+		</div> <!-- End Linux Disk-->
+		<div class='category' id='aws'> <!-- Start AWS CLI-->
+			<h2><a href="https://docs.aws.amazon.com/cli/latest/reference/index.html">AWS CLI</a></h2>
+			<div class="content">
+				<div>
+					<h4><a href="https://docs.aws.amazon.com/cli/latest/reference/s3/index.html">S3</a></h4>
+					<pre><code>aws s3 mb 's3://bucket-name' # make bucket
+aws s3 rb 's3://bucket-name' [--force] # remove bucket
+aws s3 ls ['s3://bucket-name/path']
+aws s3 cp local.txt 's3://bucket-name/remote.txt'
+aws s3 rm 's3://bucket-name/remote.txt'
+aws s3 mv 's3://bucket-name/path' ./dir --include '*.jpg' --recursive
+aws s3 sync ./dir 's3://bucket-name/path' [--delete]
+aws s3 presign 's3://bucket-name/path' --expires-in &lt;seconds&gt; # generate a temporary signed url</code></pre>
+				</div>
+				<div>
+					<h4><a href="https://docs.aws.amazon.com/cli/latest/reference/glacier/index.html">glacier</a></h4>
+					<pre><code>aws glacier list-vaults --account-id -
+aws glacier create-vault --account-id - --vault-name &lt;my_vault&gt;
+aws glacier describe-vault ...
+
+aws glacier list-multipart-uploads ...
+aws glacier abort-multipart-upload ... --upload-id &lt;upload_id&gt;
+
+aws glacier initiate-job ... --job-parameters '{"Type": "inventory-retrieval"}'
+aws glacier describe-job ... --job-id ""
+aws glacier get-job-output ... --job-id "" outfile.json
+
+aws glacier delete-archive ...
+aws glacier delete-vault ... # Vault must be empty before you delete it
+
+aws glacier list-multipart-uploads ...</code></pre>
+				</div>
+				<div>
+					<h4><a href="https://docs.aws.amazon.com/cli/latest/reference/dynamodb/index.html">dynamodb</a></h4>
+					<pre><code>aws dynamodb create-table --table-name &lt;my_table&gt; --attribute-definitions AttributeName="<i>string</i>",AttributeType="[S|N|B]"
+	--key-schema AttributeName="<i>string</i>",KeyType="[HASH|RANGE]" --provisioned-throughput ReadCapacityUnits=<i>long</i>,WriteCapacityUnits=<i>long</i>
+aws dynamodb list-tables
+aws dynamodb describe-table --table-name &lt;my_table&gt;
+aws dynamodb put-item --table-name &lt;my_table&gt; --item '{"<i>string</i>":{"N":"1"},"<i>string</i>":{"SS":["the", "quick", "brown", "fox"]}}'
+aws dynamodb get-item --table-name &lt;my_table&gt; --key '{"<i>string</i>":{"N":"1"}}' --projection-expression "<i>string</i>"
+
+--endpoint-url 'http://localhost:8000' # parameter for local development
+# S - String, N - Number, B - Boolean, SS - list of strings</code></pre>
+				</div>
+			</div>
+		</div> <!-- End AWS CLI-->
+		<div class='category' id='shell'> <!-- Start Shell Scripting-->
+			<h2>Shell</h2>
+			<div class='content'>
+				<div>
+					<h4>Date</h4>
+					<pre><code>date # print the current date and time
+date +"%Y"
+DATE=$(date +"%Y%m%d%H%M")
+MONTH=$(date +"%m")</code></pre>
+					<h4>grep</h4>
+					<pre><code>grep -rni "string" * # grep all files in a directory</code></pre>
+					<h4>find</h4>
+					<pre><code>find /foo/bar -name "filename.txt" # find file
+find ~ -name *.pdf # find PDF files
+   -executable # find an executable file
+   -atime -10 # find a file that was accessed less than 10 minutes ago
+   -newer reference.txt # find a file edited after the file "reference.txt"</code></pre>
+					<h4>awk</h4>
+					<pre><code>awk '{print $0}' somefile # print all columns
+awk '{print $3}' somefile # print only the 3rd column
+awk '{$1=$2=""; print $0}' somefile # print all but the first two columns <a target="_blank" href="https://stackoverflow.com/a/2961994/2076060">(link)</a>			
+awk '{print $2 ", " $3}' somefile # print the 2nd and 3rd columns, separated with a comma
+awk '{print $2 + $3}' somefile # print the sum of the 2nd and 3rd columns
+awk 'length($0) > 20' somefile # print those lines whose length is longer than 20 characters
+awk '$2 > 100' somefile # print those lines where the value of the second column is greater than 100</code></pre>
+					<h4>random</h4>
+					<pre><code>echo "body of email" | mail -s "Subject Line" &lt;address@domain.com&gt; # send email
+watch -n 1 'cat test.txt' # runs the cat command every second
+echo "Hello!" | xargs echo # injects the output of the first command as an argument of the second command
+uname -a # shows info about the system (kernel, architecture...)
+sudo lshw [-short]# list hardware components
+lscpu # show information about the CPU
+ps # shows the processes running right now on this terminal session
+ps aux # shows all the processes running on the computer
+mkdir -p foo/bar/baz # create all necessary directories</code></pre>
+				</div>
+			</div>
+		</div> <!-- End Shell Scripting-->
+		<div class='category' id='docker'> <!-- Start Docker-->
+			<h2>Docker</h2>
+			<div class='content'>
+				<div>
+					<h4>exec</h4>
+					<pre><code>docker exec -it &lt;container-id&gt; &lt;command&gt; # sh, npm run test</code></pre>
+					<h4>run</h4>
+					<pre><code>docker run</code></pre>
+					<h4>ps</h4>
+					<pre><code>docker stats $(docker ps --format={{.Names}}) --no-stream
+docker ps -a --format '{{.ID}}  {{.Status}}     {{.Names}}  {{.Ports}}'</code></pre>
+					<h4>random</h4>
+					<pre><code>docker stop $(docker ps -a -q) # stop all containers
+docker rm $(docker ps -a -q) # remove all containers
+docker system prune -a # Remove unused data (<a href="https://docs.docker.com/engine/reference/commandline/system_prune/">docs</a>)
+ENV NPM_CONFIG_LOGLEVEL info # set environment variable from Dockerfile
+-e NPM_CONFIG_LOGLEVEL=info # set environment variable from docker run
+docker system df # show docker disk usage</code></pre>
+				</div>
+			</div>
+        </div> <!-- End Docker-->
+        <div class='category' id='imagemagick'>
+			<h2>ImageMagick</h2>
+			<div class="content">
+				<div>
+					<h4></h4>
+					<pre><code>dwebp file.webp -o file.jpg</code></pre>
+				</div>
+			</div>
+		</div>
+		<div class='category' id='ffmpeg'>
+			<h2>ffmpeg</h2>
+			<div class="content">
+				<div>
+					<h4></h4>
+					<pre><code>ffmpeg -i input.mov -vf "setpts=(PTS-STARTPTS)/15" -crf 18 -an output.mov # Speeds up video 15x and removes sound
+ffmpeg -i input.mp4 -ss 00:00:30 -t 10 output.mp4 # Crop out a segment of the video from the 30 second mark for a duration of 10 seconds.
+ffmpeg -f concat -safe 0 -i <(for f in part*.mp4; do echo "file '$PWD/$f'"; done) -c copy output.mp4 # Concatenate video files				
+ffmpeg -i input.mp4 -vcodec libx265 -crf 28 output.mp4 # reduce video size <a href="https://unix.stackexchange.com/questions/28803/how-can-i-reduce-a-videos-size-with-ffmpeg" target="_blank">see here</a> </code></pre>
+				</div>
+			</div>
+		</div>
+
+
+		<div>
+			<h2>Random Mac commands</h2>
+			<div class="content">
+				<div>
+					<h4>How to Disable Chrome Mac Gestures (Back and Forward)</h4>
+					<pre><code>defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
+defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false</code></pre>
+				</div>
+				<div>
+					<h4>copy/paste from command line</h4>
+					<pre><code>pbcopy
+pbpaste</code></pre>
+                </div>
+                <div>
+					<h4>Troubleshooting</h4>
+					<pre><code># Bring Off-Screen Window Back Onto Screen: Select the application in the dock, then choose “Window” > “Zoom“. (<a href="https://www.technipages.com/macos-bring-window-back-onto-screen">source</a>)</code></pre>
+				</div>
+			</div>
+		</div>
+		<div class='category' id='resources'>
+			<h2>Resources</h2>
+			<div class='content'>
+				<div>
+					<h4>Shell</h4>
+					<pre><code># <a href="https://unix.stackexchange.com/questions/159513/what-are-the-shells-control-and-redirection-operators">control and redirection operators (unix.stackexchange.com)</a></code></pre>
+				</div>
+				<div>
+					<h4>Other cheatsheets</h4>
+					<pre><a href="https://overapi.com/">OverAPI.com</a>
+<a href="https://lecoupa.github.io/awesome-cheatsheets/">Awesome Cheatsheets</a>
+<a href="https://devhints.io/">Rico's Cheatsheets</a></code></pre>
+				</div>
+			</div>
+		</div>
+		
+		<!-- <div class='category' id='something'>
+			<h2>Cron</h2>
+			<div class='content'>
+				<div>
+					<h4>Title</h4>
+					<pre><code>content</pre>
+				</div>
+			</div>
+		</div> -->
+	</div>
+</div>
+</body>
+</html>

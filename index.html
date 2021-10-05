@@ -378,13 +378,19 @@ find ~ -name *.pdf # find PDF files
    -atime -10 # find a file that was accessed less than 10 minutes ago
    -newer reference.txt # find a file edited after the file "reference.txt"</code></pre>
 					<h4>awk</h4>
-					<pre><code>awk '{print $0}' somefile # print all columns
-awk '{print $3}' somefile # print only the 3rd column
+                    <pre><code>awk '{print $0}' somefile # 0 index represents all fields
+awk '{print $3}' somefile # print only the 3rd column. columns start at index 1
 awk '{$1=$2=""; print $0}' somefile # print all but the first two columns <a target="_blank" href="https://stackoverflow.com/a/2961994/2076060">(link)</a>			
 awk '{print $2 ", " $3}' somefile # print the 2nd and 3rd columns, separated with a comma
 awk '{print $2 + $3}' somefile # print the sum of the 2nd and 3rd columns
 awk 'length($0) > 20' somefile # print those lines whose length is longer than 20 characters
-awk '$2 > 100' somefile # print those lines where the value of the second column is greater than 100</code></pre>
+awk '$2 > 100' somefile # print those lines where the value of the second column is greater than 100
+awk -F '\t' '{print $6}' somefile # use tab as delimiter
+awk '{ print $NF "\t" $(NF-2)}' somefile # NF (number of fields) and NR (number of rows)
+awk '/hello/{ print "This line contains hello", $0}' somefile # pattern matching
+awk '$4~/hello/{ print "This field contains hello", $4}' somefile # field pattern matching
+awk '$4 == "0439023483"{ print $6 }' somefile # exact matching
+awk '{ s = ""; for (i = 4; i &lt;= NF; i++) s = s $i " "; print s }' # Print all columns from 4 and on</code></pre>
 					<h4>random</h4>
 					<pre><code>echo "body of email" | mail -s "Subject Line" &lt;address@domain.com&gt; # send email
 watch -n 1 'cat test.txt' # runs the cat command every second

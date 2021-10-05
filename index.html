@@ -408,7 +408,10 @@ awk '{ print $NF "\t" $(NF-2)}' somefile # NF (number of fields) and NR (number 
 awk '/hello/{ print "This line contains hello", $0}' somefile # pattern matching
 awk '$4~/hello/{ print "This field contains hello", $4}' somefile # field pattern matching
 awk '$4 == "0439023483"{ print $6 }' somefile # exact matching
-awk '{ s = ""; for (i = 4; i &lt;= NF; i++) s = s $i " "; print s }' # Print all columns from 4 and on</code></pre>
+awk '{ s = ""; for (i = 4; i &lt;= NF; i++) s = s $i " "; print s }' somefile # Print all columns from 4 and on
+awk '{ printf "%s \t %-5s", $1, substr($2,1,5)}' somefile # use printf and built in functions to format output
+awk 'BEGIN { print "start up" } { print "line match" } END { print "tear down" }' somefile
+# see more https://earthly.dev/blog/awk-examples/</code></pre>
 				</div>
 			</div>
 		</div> <!-- End awk -->

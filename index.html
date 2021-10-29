@@ -277,6 +277,7 @@ git push origin v4.5.8</code></pre>
 					<h4>Other commands</h4>
 					<pre><code>git log --pretty=format: --name-only --since="1 year ago" # show files for each commit over the past year
 git log --pretty=oneline
+git log --pretty=format:"%h %an %as %s" --author=&lt;author&gt; path/to/file.java # show short hash, author, date and commit message for a file by an author
 git merge --squash your-branch-name # squash another branch as a single commit and merge
 git rebase # Reapply commits on top of another base tip
 git stash # save all local tracked changes and reset HEAD

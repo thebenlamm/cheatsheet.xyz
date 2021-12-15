@@ -255,7 +255,8 @@ note: reseting a file will only work in --mixed mode.</code></pre>
 					<h4>Checkout</h4>
 					<span class='instructions'>Moves HEAD/index/working-dir to &lt;branch&gt;</span>
 					<pre><code>git checkout [branch] [filename] # updates HEAD to &lt;branch&gt; and will leave or attempt to merge changes in working-dir
-git checkout . - # will overwrite unstaged changes with index.</code></pre>
+git checkout . - # will overwrite unstaged changes with index.
+git checkout 'master@{7 months ago}' -- path/to/file.txt # Restore a file</code></pre>
 				</div>
 				<div>
 					<h4>Clean</h4>
